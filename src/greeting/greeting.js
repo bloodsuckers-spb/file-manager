@@ -1,7 +1,7 @@
-const USERNAME_REG_EXP = /^--username=('[^']'|"[^"]"|\S+)$/;
-const INITIAL_USERNAME = "Anonymous";
+const getUserName = () => {
+  const USERNAME_REG_EXP = /^--username=('[^']'|"[^"]"|\S+)$/;
+  const INITIAL_USERNAME = "Anonymous";
 
-export const getUserName = () => {
   const passedArgument = process.argv[2];
 
   if (!passedArgument) {
@@ -19,6 +19,8 @@ export const getUserName = () => {
   return username;
 };
 
-export const showGreeting = (username) => {
+export const showGreeting = (username = "") => {
   console.log(`Welcome to the File Manager, ${username}!`);
 };
+
+export const username = getUserName();
