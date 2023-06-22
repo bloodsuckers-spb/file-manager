@@ -1,21 +1,21 @@
-import { throwError } from "../throw-error/index.js";
-
 const USERNAME_REG_EXP = /^--username=('[^']'|"[^"]"|\S+)$/;
+const INITIAL_USERNAME = "Anonymous";
 
-export const getPassedArgument = () => {
+export const getUserName = () => {
   const passedArgument = process.argv[2];
-  if (!passedArgument) {
-    throwError();
-  }
-  return passedArgument;
-};
 
-export const getUserName = (passedArgument) => {
-  const matched = passedArgument.match(USERNAME_REG_EXP);
-  if (!matched) {
-    throwError();
+  if (!passedArgument) {
+    return INITIAL_USERNAME;
   }
+
+  const matched = passedArgument.match(USERNAME_REG_EXP);
+
+  if (!matched) {
+    return INITIAL_USERNAME;
+  }
+
   const [_, username] = matched;
+
   return username;
 };
 
