@@ -1,4 +1,5 @@
 import { stdout } from "process";
+import os  from 'os';
 
 /**
  *
@@ -9,5 +10,5 @@ import { stdout } from "process";
 export const showFarewell = (username = "", closeReadline) => {
   const FAREWELL_MESSAGE = `Thank you for using File Manager, ${username}, goodbye!`;
   closeReadline();
-  stdout.write(FAREWELL_MESSAGE);
+  stdout.write(`${FAREWELL_MESSAGE}${os.EOL}`);
 };

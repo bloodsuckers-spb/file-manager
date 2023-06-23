@@ -1,3 +1,5 @@
+import os from 'os';
+
 const getUserName = () => {
   const USERNAME_REG_EXP = /^--username=('[^']'|"[^"]"|\S+)$/;
   const INITIAL_USERNAME = "Anonymous";
@@ -20,7 +22,7 @@ const getUserName = () => {
 };
 
 export const showGreeting = (username = "") => {
-  console.log(`Welcome to the File Manager, ${username}!`);
+  console.log(`Welcome to the File Manager, ${username}!${os.EOL}`);
 };
 
 export const username = getUserName();
