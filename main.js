@@ -9,6 +9,7 @@ import { showFarewell } from "./src/farewell/index.js";
 import { throwError } from "./src/throw-error/index.js";
 import { osCommandsHandler } from "./src/os/index.js";
 import { calculateHash } from "./src/hash/index.js";
+import { compress, decompress } from "./src/compressing/index.js";
 
 const { stdin: input, stdout: output } = process;
 
@@ -127,6 +128,8 @@ export const operationsWithFiles = Object.freeze({
   mv: onMvPressed,
 });
 
+export const compressOperations= Object.freeze({})
+
 const bootstrap = () => {
   process.chdir(os.homedir());
   showGreeting(username);
@@ -171,6 +174,16 @@ const onCommandEnter = (line = "") => {
     calculateHash(secondArg.trim());
     return;
   }
+
+  if (command === "compress" && args.length === 3) {
+    compress(secondArg.trim(), thirdArg.trim());
+    return;
+  }
+
+   if (command === "decompress" && args.length === 3) {
+     compress(secondArg.trim(), thirdArg.trim());
+     return;
+   }
 
   if (command === ".exit") {
     finish();
