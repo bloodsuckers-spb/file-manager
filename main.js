@@ -1,4 +1,3 @@
-
 import path from "path";
 import fs from "fs/promises";
 import os from "os";
@@ -8,6 +7,7 @@ import readline from "readline";
 import { username, showGreeting } from "./src/greeting/index.js";
 import { showFarewell } from "./src/farewell/index.js";
 import { throwError } from "./src/throw-error/index.js";
+import { osCommandsHandler } from "./src/os/index.js";
 
 const { stdin: input, stdout: output } = process;
 
@@ -27,6 +27,7 @@ const showInvalidMessage = () => {
 };
 
 const onLsPressed = async () => {
+  const cb = (a, b) => a.name - b.name;
   const files = [];
   const folders = [];
 
@@ -44,8 +45,6 @@ const onLsPressed = async () => {
         folders.push(item);
       }
     }
-
-    const cb = (a, b) => a.name - b.name;
 
     folders.sort(cb);
     files.sort(cb);
@@ -78,9 +77,7 @@ const onAddPressed = async (filename = "") => {
   try {
     const currentPath = path.resolve(filename);
     await fs.writeFile(currentPath, "", { flag: "wx" });
-  } 
-  
-  catch {
+  } catch {
     showInvalidMessage();
   }
 };
@@ -89,9 +86,7 @@ const onRmPressed = async (path_to_file = "") => {
   try {
     const PATH = path.resolve(path_to_file);
     await fs.rm(PATH);
-  } 
-  
-  catch {
+  } catch {
     showInvalidMessage();
   }
 };
@@ -101,12 +96,20 @@ const onRnPressed = async (pathToFile = "", filename = "") => {
     const resolvedPath = path.resolve(pathToFile);
     const newFilePath = path.resolve(filename);
     await fs.rename(resolvedPath, newFilePath);
-  } 
-  
-  catch {
-     showInvalidMessage();
+  } catch {
+    showInvalidMessage();
   }
 };
+
+const onCpPressed = (path_to_file = "", path_to_new_directory = "") => {
+  const currentPath = path.resolve(path_to_file);
+  const readStream = fs.createReadStream(currentPath);
+  const writeStream = fs.createWriteStream(path_to_file);
+  readStream.on("error", showInvalidMessage);
+  readStream.pipe(process.stdout);
+};
+
+const onMvPressed = (path_to_file, path_to_new_directory) => {};
 
 export const nwd = Object.freeze({
   up: onUpPressed,
@@ -119,8 +122,8 @@ export const operationsWithFiles = Object.freeze({
   add: onAddPressed,
   rm: onRmPressed,
   rn: onRnPressed,
-  copy: "cp",
-  move: "mv",
+  cp: onCpPressed,
+  mv: onMvPressed,
 });
 
 const bootstrap = () => {
@@ -128,8 +131,6 @@ const bootstrap = () => {
   showGreeting(username);
   showWorkingDirectory();
 };
-
-export const app = bootstrap();
 
 const rl = readline.createInterface({ input, output });
 
@@ -160,6 +161,11 @@ const onCommandEnter = (line = "") => {
     return;
   }
 
+  if (command === "os" && args.length === 2) {
+    osCommandsHandler(secondArg.trim());
+    return;
+  }
+
   if (command === ".exit") {
     finish();
     return;
@@ -170,3 +176,5 @@ const onCommandEnter = (line = "") => {
 
 rl.on("SIGINT", () => showFarewell(username, closeReadline));
 rl.on("line", onCommandEnter);
+
+export const app = bootstrap();
