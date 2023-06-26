@@ -8,6 +8,7 @@ import { username, showGreeting } from "./src/greeting/index.js";
 import { showFarewell } from "./src/farewell/index.js";
 import { throwError } from "./src/throw-error/index.js";
 import { osCommandsHandler } from "./src/os/index.js";
+import { calculateHash } from "./src/hash/index.js";
 
 const { stdin: input, stdout: output } = process;
 
@@ -163,6 +164,11 @@ const onCommandEnter = (line = "") => {
 
   if (command === "os" && args.length === 2) {
     osCommandsHandler(secondArg.trim());
+    return;
+  }
+
+  if (command === "hash" && args.length === 2) {
+    calculateHash(secondArg.trim());
     return;
   }
 
