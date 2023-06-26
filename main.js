@@ -103,15 +103,21 @@ const onRnPressed = async (pathToFile = "", filename = "") => {
   }
 };
 
-const onCpPressed = (path_to_file = "", path_to_new_directory = "") => {
-  const currentPath = path.resolve(path_to_file);
-  const readStream = fs.createReadStream(currentPath);
-  const writeStream = fs.createWriteStream(path_to_file);
-  readStream.on("error", showInvalidMessage);
-  readStream.pipe(process.stdout);
+const onCpPressed = async (path_to_file = "", path_to_new_directory = "") => {
+  const { base } = path.parse(path_to_file);
+  const PATH = path.resolve(path_to_file);
+  const readStream = fs.createReadStream(PATH);
+  const writeStream = fs.createWriteStream(
+    path.resolve(path_to_new_directory, base)
+  );
+
+  await readStream.pipe(writeStream);
 };
 
-const onMvPressed = (path_to_file, path_to_new_directory) => {};
+const onMvPressed = async (path_to_file = "", path_to_new_directory = "") => {
+  await onCpPressed(path_to_file, path_to_new_directory);
+  await fs.rm(path.resolve(resolve(path_to_file)));
+};
 
 export const nwd = Object.freeze({
   up: onUpPressed,
@@ -128,7 +134,7 @@ export const operationsWithFiles = Object.freeze({
   mv: onMvPressed,
 });
 
-export const compressOperations= Object.freeze({})
+export const compressOperations = Object.freeze({});
 
 const bootstrap = () => {
   process.chdir(os.homedir());
@@ -180,10 +186,10 @@ const onCommandEnter = (line = "") => {
     return;
   }
 
-   if (command === "decompress" && args.length === 3) {
-     compress(secondArg.trim(), thirdArg.trim());
-     return;
-   }
+  if (command === "decompress" && args.length === 3) {
+    decompress(secondArg.trim(), thirdArg.trim());
+    return;
+  }
 
   if (command === ".exit") {
     finish();
