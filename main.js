@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import os from "os";
 import process from "process";
 import readline from "readline";
+import { createReadStream, createWriteStream } from "fs";
 
 import { username, showGreeting } from "./src/greeting/index.js";
 import { showFarewell } from "./src/farewell/index.js";
@@ -70,7 +71,7 @@ const onCdPressed = (pathToDirectory = "") => {
 
 const onCatPressed = async (pathToFile = "") => {
   const currentPath = path.resolve(pathToFile);
-  const readStream = fs.createReadStream(currentPath);
+  const readStream = createReadStream(currentPath);
   readStream.on("error", showInvalidMessage);
   readStream.pipe(process.stdout);
 };
@@ -106,17 +107,17 @@ const onRnPressed = async (pathToFile = "", filename = "") => {
 const onCpPressed = async (path_to_file = "", path_to_new_directory = "") => {
   const { base } = path.parse(path_to_file);
   const PATH = path.resolve(path_to_file);
-  const readStream = fs.createReadStream(PATH);
-  const writeStream = fs.createWriteStream(
+  const readStream = createReadStream(PATH);
+  const writeStream = createWriteStream(
     path.resolve(path_to_new_directory, base)
   );
 
-  await readStream.pipe(writeStream);
+  readStream.pipe(writeStream);
 };
 
 const onMvPressed = async (path_to_file = "", path_to_new_directory = "") => {
-  await onCpPressed(path_to_file, path_to_new_directory);
-  await fs.rm(path.resolve(resolve(path_to_file)));
+    onCpPressed(path_to_file, path_to_new_directory);
+    await fs.rm(path.resolve(resolve(path_to_file)));
 };
 
 export const nwd = Object.freeze({
