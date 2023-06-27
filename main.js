@@ -5,7 +5,7 @@ import process from "process";
 import readline from "readline";
 import { createReadStream, createWriteStream } from "fs";
 
-import { username, showGreeting } from "./src/greeting/index.js";
+import { showGreeting, getUserName } from "./src/greeting/index.js";
 import { showFarewell } from "./src/farewell/index.js";
 import { throwError } from "./src/throw-error/index.js";
 import { osCommandsHandler } from "./src/os/index.js";
@@ -13,6 +13,8 @@ import { calculateHash } from "./src/hash/index.js";
 import { compress, decompress } from "./src/compressing/index.js";
 
 const { stdin: input, stdout: output } = process;
+
+const username = getUserName();
 
 class DirItems {
   constructor(name = "", type = '"file"') {
@@ -147,7 +149,7 @@ const rl = readline.createInterface({ input, output });
 
 const finish = () => {
   rl.close();
-  showFarewell();
+  showFarewell(username);
 };
 
 const onCommandEnter = (line = "") => {
@@ -200,7 +202,7 @@ const onCommandEnter = (line = "") => {
   showInvalidMessage();
 };
 
-rl.on("SIGINT", () => showFarewell(username, closeReadline));
+rl.on("SIGINT", finish);
 rl.on("line", onCommandEnter);
 
 export const app = bootstrap();
