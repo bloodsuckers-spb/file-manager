@@ -1,12 +1,13 @@
 import path from "path";
-import { createBrotliCompress } from "zlib";
+import { createBrotliCompress, createBrotliDecompress } from "zlib";
 import { pipeline } from "stream/promises";
 import { createReadStream, createWriteStream } from "fs";
 
 export const compress = async (path_to_file = "", path_to_destination = "") => {
-  const { base } = path.parse(path_to_file);
+  const { base} = path.parse(path_to_file);
+  console.log(base)
   const sourcePath = path.resolve(path_to_file);
-  const destinationPath = path.resolve(path_to_destination, `${base}.gz`);
+  const destinationPath = path.resolve(path_to_destination, `${base}.br`);
 
   const brotZip = createBrotliCompress();
   const source = createReadStream(sourcePath);
@@ -21,11 +22,10 @@ export const decompress = async (
 ) => {
   const { name } = path.parse(path_to_file);
 
-  const brotZip = createBrotliCompress();
+  const brotZip = createBrotliDecompress();
   const source = createReadStream(path.resolve(path_to_file));
   const destination = createWriteStream(
-    path.resolve(path_to_destination),
-    name
+    path.resolve(path_to_destination, name)
   );
 
   await pipeline(source, brotZip, destination);
