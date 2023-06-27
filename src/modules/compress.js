@@ -1,7 +1,4 @@
-import path from "path";
-import { createReadStream, createWriteStream } from "fs";
 import { createBrotliCompress } from "zlib";
-
 import { pipeline } from "stream/promises";
 
 export const compress = async (path_to_file = "", path_to_destination = "") => {
@@ -13,16 +10,21 @@ export const compress = async (path_to_file = "", path_to_destination = "") => {
   const source = createReadStream(sourcePath);
   const destination = createWriteStream(destinationPath);
 
-  pipeline(source, brotZip, destination);
+  await pipeline(source, brotZip, destination);
 };
 
-export const decompress = (path_to_file = "", path_to_destination = "") => {
+export const decompress = async (
+  path_to_file = "",
+  path_to_destination = ""
+) => {
   const { name } = path.parse(path_to_file);
+
   const brotZip = createBrotliCompress();
   const source = createReadStream(path.resolve(path_to_file));
   const destination = createWriteStream(
     path.resolve(path_to_destination),
     name
   );
-  source.pipe(brotZip).pipe(destination);
+
+  await pipeline(source, brotZip, destination);
 };
