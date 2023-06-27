@@ -13,7 +13,7 @@ export const compress = async (path_to_file = "", path_to_destination = "") => {
   const source = createReadStream(sourcePath);
   const destination = createWriteStream(destinationPath);
 
-  await pipeline(source, brotZip, destination);
+  pipeline(source, brotZip, destination);
 };
 
 export const decompress = (path_to_file = "", path_to_destination = "") => {
