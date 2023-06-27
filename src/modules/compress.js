@@ -5,7 +5,6 @@ import { createReadStream, createWriteStream } from "fs";
 
 export const compress = async (path_to_file = "", path_to_destination = "") => {
   const { base} = path.parse(path_to_file);
-  console.log(base)
   const sourcePath = path.resolve(path_to_file);
   const destinationPath = path.resolve(path_to_destination, `${base}.br`);
 
