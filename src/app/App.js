@@ -44,10 +44,6 @@ export class App {
     console.log(`You are currently in ${process.cwd()}`);
   }
 
-  showInvalidMessage() {
-    console.log("Invalid input message");
-  }
-
   showFarewell() {
     const FAREWELL_MESSAGE = `Thank you for using File Manager, ${this.username}, goodbye!`;
     console.log(`${FAREWELL_MESSAGE}${os.EOL}`);
