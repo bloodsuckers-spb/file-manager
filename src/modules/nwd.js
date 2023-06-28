@@ -37,9 +37,6 @@ export const onLsPressed = async () => {
 };
 
 export const onUpPressed = async () => {
-  if (process.cwd() === os.homedir()) {
-    return;
-  }
   process.chdir(path.resolve(".."));
 };
 
