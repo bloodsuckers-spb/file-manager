@@ -1,6 +1,8 @@
 import readline from "readline";
 import process from "process";
 
+import { showInvalidMessage } from "../utils/index.js";
+
 import {
   onCatPressed,
   onAddPressed,
@@ -53,7 +55,12 @@ export class Readline {
       this.close();
       return;
     }
-    this.commands[command.trim()](secondArg, thirdArg).then(fn);
+    if (this.commands[command.trim()]) {
+      this.commands[command.trim()](secondArg, thirdArg).then(fn);
+    } else {
+      showInvalidMessage();
+      fn();
+    }
   }
 
   close() {
