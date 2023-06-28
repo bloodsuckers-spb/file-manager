@@ -1,6 +1,5 @@
 import process from "process";
 import fs from "fs/promises";
-import os from "os";
 import path from "path";
 
 import { DirItems } from "../dir-items/index.js";
@@ -13,12 +12,11 @@ export const onLsPressed = async () => {
   const folders = [];
 
   try {
-    const dirItems = await fs.readdir(process.cwd());
+    const dirItems = await fs.readdir(process.cwd(), { withFileTypes: true });
 
     for (const dirItem of dirItems) {
-      const stat = await fs.stat(dirItem);
-      const type = stat.isFile() ? "file" : "directory";
-      const item = new DirItems(dirItem, type);
+      const type = dirItem.isFile() ? "file" : "directory";
+      const item = new DirItems(dirItem.name, type);
 
       if (type === "file") {
         files.push(item);
