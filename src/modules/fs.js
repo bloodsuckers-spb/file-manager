@@ -57,5 +57,5 @@ export const onMvPressed = async (
   path_to_new_directory = ""
 ) => {
   onCpPressed(path_to_file, path_to_new_directory);
-  await fs.rm(path.resolve(resolve(path_to_file)));
+  await fs.rm(path.resolve(path_to_file));
 };
